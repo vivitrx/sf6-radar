@@ -10,14 +10,13 @@ interface Props {
 }
 
 const n = allDimensions.length;
-const baseR = 24; // 每 1 分对应 24px 半径（基准满分=10）
+const r = 240; // 雷达图半径（固定，不随满分变化）
 const SVG_W = 982;
 const SVG_H = 843;
 const cx = SVG_W / 2;
 const cy = SVG_H / 2;
 
 export function RadarChart({ scores, maxScore, characterName, onScoreChange, chartRef }: Props) {
-  const r = baseR * maxScore; // 最大半径随满分等比缩放
 
   const angles = useMemo(
     () =>
@@ -124,9 +123,9 @@ export function RadarChart({ scores, maxScore, characterName, onScoreChange, cha
             />
             <text
               x={cx + r * scale * Math.cos(angles[0])}
-              y={cy + r * scale * Math.sin(angles[0]) - 6 * (maxScore / 10)}
+              y={cy + r * scale * Math.sin(angles[0]) - 6}
               textAnchor="middle"
-              fontSize={9 * (maxScore / 10)}
+              fontSize={9}
               fill="#999"
             >
               {val}
@@ -157,8 +156,8 @@ export function RadarChart({ scores, maxScore, characterName, onScoreChange, cha
           x2={cx + r * Math.cos(angles[idx])}
           y2={cy + r * Math.sin(angles[idx])}
           stroke="#aaa"
-          strokeWidth={1 * (maxScore / 10)}
-          strokeDasharray={`${6 * (maxScore / 10)},${4 * (maxScore / 10)}`}
+          strokeWidth={1}
+          strokeDasharray="6,4"
         />
       ))}
 
@@ -168,10 +167,10 @@ export function RadarChart({ scores, maxScore, characterName, onScoreChange, cha
           key={i}
           cx={p.x}
           cy={p.y}
-          r={6 * (maxScore / 10)}
+          r={6}
           fill="#ff3a3a"
           stroke="white"
-          strokeWidth={2 * (maxScore / 10)}
+          strokeWidth={2}
           style={{ cursor: "grab" }}
           onMouseDown={() => handleMouseDown(i)}
         />
@@ -195,7 +194,7 @@ export function RadarChart({ scores, maxScore, characterName, onScoreChange, cha
             y={ly}
             textAnchor={anchor}
             dominantBaseline="middle"
-            fontSize={12 * (maxScore / 10)}
+            fontSize={12}
             fill="#333"
           >
             {dim.name}: {scores[i]}
@@ -238,7 +237,7 @@ export function RadarChart({ scores, maxScore, characterName, onScoreChange, cha
               y={ly}
               textAnchor="middle"
               dominantBaseline="middle"
-              fontSize={15 * (maxScore / 10)}
+              fontSize={15}
               fontWeight="bold"
               fill={port.color}
             >

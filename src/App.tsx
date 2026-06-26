@@ -66,6 +66,7 @@ export function App() {
           导出图片
         </button>
       </div>
+      <div className="hint">💡 先设定满分，再拖拽雷达图顶点进行评分</div>
       <div className="chart-wrapper">
         <RadarChart
           scores={scores}

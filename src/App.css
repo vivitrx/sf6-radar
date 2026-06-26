@@ -24,6 +24,13 @@ body {
   margin: 0 auto;
 }
 
+/* ── 提示语 ── */
+.hint {
+  font-size: 13px;
+  color: #536471;
+  margin-bottom: 10px;
+}
+
 /* ── 顶部控制栏 ── */
 .controls {
   display: flex;
