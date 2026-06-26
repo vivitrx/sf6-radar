@@ -29,8 +29,33 @@ export function RadarChart({ scores, maxScore, characterName, onScoreChange, cha
 
   const [dragIndex, setDragIndex] = useState<number | null>(null);
 
-  const handleMouseDown = (index: number) => {
+  // 点击顶点圆
+  const handleCircleMouseDown = (index: number) => {
     setDragIndex(index);
+  };
+
+  // 点击背景空白区：自动吸附最近角度的顶点并开始拖拽
+  const handleSvgMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (e.target !== e.currentTarget) return; // 点了子元素（圆），不处理
+    const svg = e.currentTarget;
+    const rect = svg.getBoundingClientRect();
+    const mx = ((e.clientX - rect.left) / rect.width) * SVG_W;
+    const my = ((e.clientY - rect.top) / rect.height) * SVG_H;
+    const dx = mx - cx;
+    const dy = my - cy;
+    // 找最近角度
+    let best = 0;
+    let bestDiff = Infinity;
+    for (let i = 0; i < n; i++) {
+      const diff = Math.abs(Math.atan2(dy, dx) - angles[i]);
+      const nd = Math.min(diff, 2 * Math.PI - diff);
+      if (nd < bestDiff) { bestDiff = nd; best = i; }
+    }
+    setDragIndex(best);
+    // 立即更新一次分数
+    let dist = Math.sqrt(dx * dx + dy * dy);
+    dist = Math.max(0, Math.min(r, dist));
+    onScoreChange(best, Math.round((dist / r) * maxScore));
   };
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
@@ -62,10 +87,11 @@ export function RadarChart({ scores, maxScore, characterName, onScoreChange, cha
     <svg
       ref={chartRef}
       viewBox={`0 0 ${SVG_W} ${SVG_H}`}
-      style={{}}
+      style={{ userSelect: "none" }}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      onMouseDown={handleSvgMouseDown}
     >
       {/* 标题 */}
       <text
@@ -110,27 +136,16 @@ export function RadarChart({ scores, maxScore, characterName, onScoreChange, cha
       {/* 背景网格：同心圆数量 = maxScore（上限 10） */}
       {Array.from({ length: Math.min(maxScore, 10) }, (_, i) => {
         const scale = (i + 1) / Math.min(maxScore, 10);
-        const val = Math.round(maxScore * scale);
         return (
-          <g key={scale}>
-            <circle
-              cx={cx}
-              cy={cy}
-              r={r * scale}
-              fill="none"
-              stroke="#cccccc"
-              strokeWidth={0.5}
-            />
-            <text
-              x={cx + r * scale * Math.cos(angles[0])}
-              y={cy + r * scale * Math.sin(angles[0]) - 6}
-              textAnchor="middle"
-              fontSize={9}
-              fill="#999"
-            >
-              {val}
-            </text>
-          </g>
+          <circle
+            key={scale}
+            cx={cx}
+            cy={cy}
+            r={r * scale}
+            fill="none"
+            stroke="#cccccc"
+            strokeWidth={0.5}
+          />
         );
       })}
 
@@ -172,7 +187,7 @@ export function RadarChart({ scores, maxScore, characterName, onScoreChange, cha
           stroke="white"
           strokeWidth={2}
           style={{ cursor: "grab" }}
-          onMouseDown={() => handleMouseDown(i)}
+          onMouseDown={() => handleCircleMouseDown(i)}
         />
       ))}
 

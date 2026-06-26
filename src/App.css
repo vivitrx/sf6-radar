@@ -107,3 +107,59 @@ body {
   max-width: 100%;
   height: auto;
 }
+
+/* ── 释义区 ── */
+.explanation {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #eff3f4;
+}
+
+.explanation h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f1419;
+  margin-bottom: 20px;
+}
+
+.explanation h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f1419;
+  margin: 20px 0 8px;
+}
+
+.explanation p {
+  font-size: 14px;
+  color: #536471;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.explanation table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.explanation th {
+  text-align: left;
+  padding: 6px 10px;
+  background: #f7f9f9;
+  color: #536471;
+  font-weight: 500;
+  border: 1px solid #eff3f4;
+}
+
+.explanation td {
+  padding: 6px 10px;
+  border: 1px solid #eff3f4;
+  vertical-align: top;
+  line-height: 1.4;
+}
+
+.explanation td:first-child {
+  font-weight: 500;
+  white-space: nowrap;
+}
