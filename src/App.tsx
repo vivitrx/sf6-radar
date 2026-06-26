@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from "react";
 import { toPng } from "html-to-image";
 import { RadarChart } from "./components/RadarChart";
+import "./App.css";
 
 export function App() {
   const [characterName, setCharacterName] = useState("肯");
@@ -39,30 +40,41 @@ export function App() {
   }, [characterName]);
 
   return (
-    <div>
-      <div>
-        <span>角色名：</span>
-        <input
-          type="text"
-          value={characterName}
-          onChange={(e) => setCharacterName(e.target.value)}
-        />
-        <span>满分：</span>
-        <input
-          type="number"
-          value={maxScore}
-          min={1}
-          max={10}
-          onChange={handleMaxScoreChange}
+    <div className="app-card">
+      <div className="controls">
+        <div className="control-group">
+          <label>角色名</label>
+          <input
+            className="input-field input-field--name"
+            type="text"
+            value={characterName}
+            onChange={(e) => setCharacterName(e.target.value)}
+          />
+        </div>
+        <div className="control-group">
+          <label>满分</label>
+          <input
+            className="input-field"
+            type="number"
+            value={maxScore}
+            min={1}
+            max={10}
+            onChange={handleMaxScoreChange}
+          />
+        </div>
+        <button className="btn btn-primary" onClick={handleExport}>
+          导出图片
+        </button>
+      </div>
+      <div className="chart-wrapper">
+        <RadarChart
+          scores={scores}
+          maxScore={maxScore}
+          characterName={characterName}
+          onScoreChange={handleScoreChange}
+          chartRef={chartRef}
         />
       </div>
-      <button onClick={handleExport}>导出图片</button>
-      <RadarChart
-        scores={scores}
-        maxScore={maxScore}
-        onScoreChange={handleScoreChange}
-        chartRef={chartRef}
-      />
     </div>
   );
 }

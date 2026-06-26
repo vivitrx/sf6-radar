@@ -4,19 +4,20 @@ import { allDimensions } from "../data/dimensions";
 interface Props {
   scores: number[];
   maxScore: number;
+  characterName: string;
   onScoreChange: (index: number, newScore: number) => void;
   chartRef: React.RefObject<SVGSVGElement | null>;
 }
 
 const n = allDimensions.length;
-const baseR = 20; // 每 1 分对应 20px 半径
+const baseR = 24; // 每 1 分对应 24px 半径（基准满分=10）
+const SVG_W = 982;
+const SVG_H = 843;
+const cx = SVG_W / 2;
+const cy = SVG_H / 2;
 
-export function RadarChart({ scores, maxScore, onScoreChange, chartRef }: Props) {
+export function RadarChart({ scores, maxScore, characterName, onScoreChange, chartRef }: Props) {
   const r = baseR * maxScore; // 最大半径随满分等比缩放
-  const labelMargin = r * 0.7 + 20;
-  const size = 2 * (r + labelMargin); // SVG viewBox 边长
-  const cx = size / 2;
-  const cy = size / 2;
 
   const angles = useMemo(
     () =>
@@ -37,8 +38,8 @@ export function RadarChart({ scores, maxScore, onScoreChange, chartRef }: Props)
     if (dragIndex === null) return;
     const svg = e.currentTarget;
     const rect = svg.getBoundingClientRect();
-    const mx = ((e.clientX - rect.left) / rect.width) * size;
-    const my = ((e.clientY - rect.top) / rect.height) * size;
+    const mx = ((e.clientX - rect.left) / rect.width) * SVG_W;
+    const my = ((e.clientY - rect.top) / rect.height) * SVG_H;
     const dx = mx - cx;
     const dy = my - cy;
     let dist = Math.sqrt(dx * dx + dy * dy);
@@ -61,12 +62,24 @@ export function RadarChart({ scores, maxScore, onScoreChange, chartRef }: Props)
   return (
     <svg
       ref={chartRef}
-      viewBox={`0 0 ${size} ${size}`}
-      style={{ width: "100%" }}
+      viewBox={`0 0 ${SVG_W} ${SVG_H}`}
+      style={{}}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
+      {/* 标题 */}
+      <text
+        x={SVG_W / 2}
+        y={40}
+        textAnchor="middle"
+        fontSize={22}
+        fontWeight="bold"
+        fill="#212121"
+      >
+        {characterName} 角色性能雷达图
+      </text>
+
       {/* 四大端口数据色块 —— 用 scores 顶点拼接，非满扇形 */}
       {(() => {
         const subPolygons = [
@@ -182,7 +195,7 @@ export function RadarChart({ scores, maxScore, onScoreChange, chartRef }: Props)
             y={ly}
             textAnchor={anchor}
             dominantBaseline="middle"
-            fontSize={10 * (maxScore / 10)}
+            fontSize={12 * (maxScore / 10)}
             fill="#333"
           >
             {dim.name}: {scores[i]}
@@ -225,7 +238,7 @@ export function RadarChart({ scores, maxScore, onScoreChange, chartRef }: Props)
               y={ly}
               textAnchor="middle"
               dominantBaseline="middle"
-              fontSize={12 * (maxScore / 10)}
+              fontSize={15 * (maxScore / 10)}
               fontWeight="bold"
               fill={port.color}
             >
