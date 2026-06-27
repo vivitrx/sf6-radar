@@ -12,7 +12,7 @@ export function App() {
   const chartRef = useRef<SVGSVGElement | null>(null);
 
   const handleMaxScoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newMax = Number(e.target.value);
+    const newMax = parseInt(e.target.value, 10);
     if (newMax <= 0 || isNaN(newMax)) return;
     const capped = Math.min(newMax, 10);
     setScores((prev) => prev.map((s) => Math.round(s * (capped / maxScore))));
@@ -59,6 +59,7 @@ export function App() {
             value={maxScore}
             min={1}
             max={10}
+            step={1}
             onChange={handleMaxScoreChange}
           />
         </div>
@@ -97,7 +98,7 @@ export function App() {
           <thead><tr><th>子维度</th><th>具体指标</th></tr></thead>
           <tbody>
             <tr><td>绿冲性能</td><td>有没有2MK绿冲取消、快绿冲（绿冲发生帧数）</td></tr>
-            <tr><td>投Loop</td><td>有没有loop投，能持续制造起身二择</td></tr>
+            <tr><td>Loop投</td><td>有没有loop投，能持续制造起身二择</td></tr>
             <tr><td>反截绿冲</td><td>对手想截你的绿冲时，你有没有办法反制</td></tr>
             <tr><td>搬运能力</td><td>连段搬运距离，能把对手从版中推到版边的能力</td></tr>
           </tbody>

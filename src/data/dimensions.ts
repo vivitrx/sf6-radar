@@ -9,7 +9,7 @@ export const allDimensions: Dimension[] = [
   { name: "安全复合", group: "立回端" },
   { name: "特殊取消", group: "立回端" },
   { name: "绿冲性能", group: "进攻端" },
-  { name: "投Loop", group: "进攻端" },
+  { name: "Loop投", group: "进攻端" },
   { name: "反截绿冲", group: "进攻端" },
   { name: "搬运能力", group: "进攻端" },
   { name: "确反伤害", group: "伤害端" },
